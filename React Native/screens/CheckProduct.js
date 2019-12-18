@@ -11,7 +11,8 @@ export default class CheckProduct extends Component {
   };
   state = {
     loading: true,
-    productInfo: null
+    productInfo: null,
+    notFound: false
   };
 
   componentDidMount() {
@@ -26,20 +27,25 @@ export default class CheckProduct extends Component {
         upc: data
       })
       .then(data => {
-        this.setState({
-          ...this.state,
-          productInfo: data.data.product,
-          loading: false
-        });
+        if(data.data.product){
+          this.setState({
+            ...this.state,
+            productInfo: data.data.product,
+            loading: false
+          });
+        }else{
+          this.setState({...this.state, notFound: true, loading: false}, () => console.log(data))
+        }
       })
       .catch(err => console.log(err));
   };
 
   render() {
+    const { productInfo } = this.state;
     if (this.state.loading) {
       return (
         <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          style={{ flex: 1, justifyContent: "center", alignItems: "stretch" }}
         >
           <ActivityIndicator
             animating={true}
@@ -49,21 +55,30 @@ export default class CheckProduct extends Component {
         </View>
       );
     }
-    const { productInfo } = this.state;
-    console.log(productInfo);
+    if(this.state.notFound){
+      return(
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'stretch'}}>
+          <View> 
+            <Text style={{fontSize: 16,fontWeight: "bold", textAlign: 'center' }}>Product Not Found</Text>
+          </View>
+          </View>
+      )
+    }
     return (
       <Container>
         <ViewCard>
-          {/* <Text>{productInfo.name}</Text>
-        <Text>{productInfo.brand}</Text>
-        <Text>{productInfo.origin}</Text>
-        <Text>{productInfo.vendor}</Text>
-        <Text>exp: {productInfo.expiry_date}</Text> */}
-          <Text style={[styles.Btext]}>Apple juice</Text>
-          <Text>Nineta</Text>
-          <Text>Bangladesh</Text>
-          <Text>akiz group</Text>
-          <Text>exp: 12/12/12</Text>
+            <Text style={[styles.Btext]}>{productInfo.name}</Text>
+          <Text style={{textAlign: 'center'}}>Brand: {productInfo.brand}</Text>
+          <Text style={{textAlign: 'center'}}>Origin: {productInfo.origin}</Text>
+          <Text style={{textAlign: 'center'}}>Vendor:  {productInfo.vendor}</Text>
+          <Text style={{textAlign: 'center'}}>exp: {productInfo.expiry_date}</Text>
+          {productInfo.scanned ? (<View style={{marginTop: 19, backgroundColor: "red", marginBottom: 4, padding: 19}}>
+            <Text>The product has been scanned multiple times(try to avoid)</Text>
+          </View>) : (
+            <View style={{marginTop: 19, backgroundColor: "green", marginBottom: 4, padding: 19}}>
+              <Text style={{textAlign: 'center',  color: "#fff"}}>This product is authenic</Text>
+            </View>
+          )}
         </ViewCard>
       </Container>
     );
@@ -94,9 +109,10 @@ const ViewCard = Styled.View`
 
 const styles = StyleSheet.create({
   Btext: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "bold",
     marginBottom: 8,
-    letterSpacing: 2
+    alignSelf: 'stretch',
+    textAlign: 'center'
   }
 });

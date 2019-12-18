@@ -26,8 +26,8 @@ export default class HomeScreen extends React.Component {
 
   async componentDidMount() {
     this.getPermissionsAsync();
-    this.setState({ scanned: true });
-    this.props.navigation.navigate("Check", { data: 8992772485012 });
+    // this.setState({ scanned: true });
+    // this.props.navigation.navigate("Check", { data: 8992772485012 });
   }
 
   getPermissionsAsync = async () => {
@@ -36,9 +36,8 @@ export default class HomeScreen extends React.Component {
   };
 
   handleBarCodeScanned = async ({ type, data }) => {
-    // this.setState({ scanned: true });
-    // console.log(data);
-    this.props.navigation.navigate("Check", { data: data, type: type });
+    this.setState({ scanned: true });
+    this.props.navigation.navigate("Check", { data: data});
   };
 
   render() {
