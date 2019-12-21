@@ -3,14 +3,14 @@ import {
   Text,
   View,
   StyleSheet,
-  Button,
   ScrollView,
-  Dimensions
+  Dimensions,
+  Button
 } from "react-native";
 import * as Permissions from "expo-permissions";
 import { BarCodeScanner } from "expo-barcode-scanner";
-import Styled from "styled-components";
 import Constants from "expo-constants";
+import Styled from "styled-components";
 
 import CompanyCard from "../components/CompanyCard";
 
@@ -26,8 +26,6 @@ export default class HomeScreen extends React.Component {
 
   async componentDidMount() {
     this.getPermissionsAsync();
-    // this.setState({ scanned: true });
-    // this.props.navigation.navigate("Check", { data: 8992772485012 });
   }
 
   getPermissionsAsync = async () => {
@@ -37,7 +35,7 @@ export default class HomeScreen extends React.Component {
 
   handleBarCodeScanned = async ({ type, data }) => {
     this.setState({ scanned: true });
-    this.props.navigation.navigate("Check", { data: data});
+    this.props.navigation.navigate("Check", { data: data, type: type });
   };
 
   render() {
@@ -47,7 +45,16 @@ export default class HomeScreen extends React.Component {
       return <Text>Requesting for camera permission</Text>;
     }
     if (hasCameraPermission === false) {
-      return <Text>No access to camera</Text>;
+      return (
+        <View>
+          <Text>No access to camera</Text>;
+          <Button
+            mode="outlined"
+            color="#ff6b81"
+            onPress={() => this.getPermissionsAsync()}
+          ></Button>
+        </View>
+      );
     }
 
     return (
@@ -116,22 +123,23 @@ const ScannereWrapper = Styled.View`
 const Styles = StyleSheet.create({
   CompanyWrapper: {
     flex: 2,
-    paddingTop: 15,
+    paddingTop: 10,
     alignSelf: "stretch",
     justifyContent: "center"
   },
   ScannereWrapper: {
-    flex: 3,
+    flex: 4,
     alignSelf: "stretch",
-    backgroundColor: "red"
+    backgroundColor: "red",
+    width: "100%"
   },
   rc: {
     textAlign: "left",
-    fontSize: 16,
+    fontSize: 13,
     fontWeight: "bold",
     marginBottom: 9,
     paddingLeft: 10,
     alignSelf: "stretch",
-    color: "#2c3e50"
+    color: "#34495e"
   }
 });

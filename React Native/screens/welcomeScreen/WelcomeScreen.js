@@ -6,14 +6,14 @@ import AppIntroSlider from "react-native-app-intro-slider";
 const slides = [
   {
     key: "somethun",
-    title: "Product Sergent",
+    title: "Product Sergeant",
     text: "Search any product to check authenticity",
     icon: "search",
     backgroundColor: "#6c5ce7"
   },
   {
     key: "somethun-dos",
-    title: "Product Sergent",
+    title: "Product Sergeant",
     text: "Get the right product",
     icon: "check-circle",
     backgroundColor: "#ff6b81"
@@ -62,7 +62,7 @@ export default class WelcomeScreen extends React.Component {
     return (
       <TouchableNativeFeedback
         onPress={() => {
-          this.props.done(false);
+          this.props.done();
         }}
       >
         <View style={styles.buttonCircle} onPress>
